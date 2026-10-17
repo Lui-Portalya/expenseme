@@ -37,3 +37,6 @@ The SQLite database is created automatically at `data/expenseme.db` (override wi
 
 ## Not included yet
 Login rate limiting, recurring expenses, receipt uploads, multi-currency per expense.
+
+## License
+MIT — see [LICENSE](LICENSE).
