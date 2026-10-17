@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Expense Me
 
-## Getting Started
+Personal expense tracking built with Next.js (App Router), React, TypeScript and SQLite.
 
-First, run the development server:
+## Features
+- Email/password accounts with server-side sessions (httpOnly cookie, bcrypt hashes)
+- Expenses: add, edit, delete, search, filter by date/category, sort, paginate, CSV export
+- Categories: per-user, colored, seeded with defaults on signup
+- Budgets: overall or per-category monthly limits with progress tracking
+- Dashboard: monthly total vs. last month, spending by category, daily and 6-month trends
+- Settings: profile, currency, change password
 
+## Getting started
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000 — register an account to begin
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The SQLite database is created automatically at `data/expenseme.db` (override with `EXPENSEME_DB`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build / server (set `COOKIE_INSECURE=1` to log in over plain http locally) |
+| `npm test` | Vitest unit tests (in-memory SQLite) |
+| `npm run typecheck` / `npm run lint` | Static checks |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Layout
+- `src/lib/db.ts` – connection and schema (idempotent, runs on first use)
+- `src/lib/repos/*` – plain-SQL data access, every query scoped by `user_id`
+- `src/lib/actions/*` – server actions with zod validation
+- `src/lib/auth.ts`, `sessions.ts` – password hashing and sessions
+- `src/middleware.ts` – cookie gate; real validation is in `requireUser()`
+- `src/app/(auth)` – login/register; `src/app/(app)` – authenticated pages
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Not included yet
+Login rate limiting, recurring expenses, receipt uploads, multi-currency per expense.
